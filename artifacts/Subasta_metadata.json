@@ -139,38 +139,30 @@
 			},
 			{
 				"inputs": [],
-				"name": "tiempoDuracionSubasta",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "tiempoInicioSubasta",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "verDepositoOferente",
 				"outputs": [
 					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "verGanador",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -192,19 +184,6 @@
 			{
 				"inputs": [],
 				"name": "verTiempoFaltante",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "verTimestampActual",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -273,11 +252,11 @@
 	},
 	"sources": {
 		"subasta/subasta.sol": {
-			"keccak256": "0x278bf120b88fd64c2f71b101eb6f6d6c72690dc9824313de5d9e83ce9471516e",
+			"keccak256": "0x39184e68d60df19be7f07774367c8134546444d4d74c4e53aa66d2c2c6ee19ad",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://b53f0117e1d889244504ecf1d46b30acb9f765753316d00f5ede7abff68ef7f2",
-				"dweb:/ipfs/QmY6wPy5QcYQ9dzLbQZztD9mkWLmaUY21Vjv2fJRnytftB"
+				"bzz-raw://269752af733617cec23356907cdc172cf1b37da7b23b8daa53a5c93ae55e7193",
+				"dweb:/ipfs/QmXSjGCBNMquF2GhmsxEC7hkc3yJJoyn2kRR7P8SyCsz3g"
 			]
 		}
 	},

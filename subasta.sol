@@ -13,8 +13,8 @@ contract Subasta {
     bool public subastaTerminada;
     bool habilitarDevoluciones;
     uint256 public ofertaBase;
-    uint256 public tiempoDuracionSubasta;
-    uint256 public tiempoInicioSubasta;
+    uint256 private tiempoDuracionSubasta;
+    uint256 private tiempoInicioSubasta;
     address payable private direccionSubasta;
     mapping(address => uint256) private depositos;
 
@@ -44,7 +44,7 @@ contract Subasta {
         subastaTerminada=false;
         habilitarDevoluciones=false;
         ofertaBase = 1; // oferta base o minima 1 Ether
-        tiempoDuracionSubasta = block.timestamp + 60 * 5; // 1 mes
+        tiempoDuracionSubasta = block.timestamp + 60 * 60; // 1 hora
         tiempoInicioSubasta = block.timestamp; // la subasta inicia al crear el contrato
         direccionSubasta = payable(msg.sender); // direccion de la subasta es payable
     }
@@ -131,9 +131,9 @@ contract Subasta {
 
         //aumento de 10 minutos el tiempoDuracionSubasta (10 min = 3600 * 10 segundos).
         //Ver que falten al menos 10 min al fin de la subasta
-        //if(tiempoDuracionSubasta-block.timestamp>60*10){
-        //    tiempoDuracionSubasta += 60 * 10;   // tiempo de 10 minutos adicionales
-        //}
+        if(tiempoDuracionSubasta-block.timestamp>60*10){
+            tiempoDuracionSubasta += 60 * 10;   // tiempo de 10 minutos adicionales
+        }
         emit NuevaOferta(msg.value, msg.sender); // evento oferta y ofertante
     }
 
@@ -159,7 +159,7 @@ contract Subasta {
     //subastaTiempoFinalizado 
     devolucionesHabilitadas
     isOwner
-    //isNotGanador(dir)
+    isNotGanador(dir)
     
     {
         require(msg.value<=depositos[dir],"no tiene suficientes fondos para retirar");
@@ -199,6 +199,9 @@ contract Subasta {
 
 // FUNCIONES AUXILIARES
 
+    function verGanador() external view returns (uint256[] memory,address) {
+        return (ofertas[ganadorDireccion],ganadorDireccion);
+    }
 
     function verTodasLasOfertas() external view returns(Ofertas[] memory ){
         return matriz_ofertas;
@@ -212,7 +215,7 @@ contract Subasta {
         return ofertas[oferente][ofertas[oferente].length-1];
     }
 
-    function verTimestampActual() public view returns (uint256) {
+    function verTimestampActual() private view returns (uint256) {
         return block.timestamp;
     }
 
