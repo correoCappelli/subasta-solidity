@@ -1,4 +1,5 @@
-# Subasta Solidity - Auditoría
+# Subasta Solidity - Auditoría 
+- Prof . Sebastian Perez + ETHKIPU.ORG talento-tech T AM
 
 ## Introducción
 Este contrato implementa una **subasta descentralizada** en Ethereum, permitiendo a los usuarios ofertar y competir por un activo dentro de un período determinado. Solo el dueño de la subasta puede finalizarla y habilitar la devolución de depósitos.
