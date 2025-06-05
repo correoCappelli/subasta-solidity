@@ -6,7 +6,7 @@ Este contrato implementa una **subasta descentralizada** en Ethereum, permitiend
 **Nota** : Si se quiere que `finalizarSubasta()` y `retornarDeposito()` estén habilitados unicamente al terminar la subasta, entonces, hay que descomentar el modifier `//subastaTiempoFinalizado` de las funciones.
 
 ## Características principales:
-- **Recepción de Ether** mediante `receive()` y `fallback()`.
+- **Se incluyen** `receive()` y `fallback()`.
 - **Registro de ofertas** y determinación del **ganador**.
 - **Tiempo límite de la subasta** con posibilidad de extensión.
 - **Protección contra ofertas fraudulentas** (debe superar la oferta más alta en un 5%).
