@@ -99,13 +99,7 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address payable",
-						"name": "dir",
-						"type": "address"
-					}
-				],
+				"inputs": [],
 				"name": "retornarDeposito",
 				"outputs": [],
 				"stateMutability": "payable",
@@ -114,9 +108,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address payable",
-						"name": "dir",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "_cantidad",
+						"type": "uint256"
 					}
 				],
 				"name": "retornarDepositoParciales",
@@ -132,6 +126,19 @@
 						"internalType": "bool",
 						"name": "",
 						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "verBalanceContrato",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -237,7 +244,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"subasta/subasta.sol": "Subasta"
+			"subasta.sol": "Subasta"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -251,12 +258,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"subasta/subasta.sol": {
-			"keccak256": "0x39184e68d60df19be7f07774367c8134546444d4d74c4e53aa66d2c2c6ee19ad",
+		"subasta.sol": {
+			"keccak256": "0x6623e0770db60ef3fcbdbe9f88102d9906749af4b91a24c673858841469c6869",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://269752af733617cec23356907cdc172cf1b37da7b23b8daa53a5c93ae55e7193",
-				"dweb:/ipfs/QmXSjGCBNMquF2GhmsxEC7hkc3yJJoyn2kRR7P8SyCsz3g"
+				"bzz-raw://4db80ab17cfd7dfd38e75264d7d065f9b9b4e4449f061968203603b84edb9177",
+				"dweb:/ipfs/QmfUBKsnPUC86Yrbgk2naEZwj3WYGUC4F2EvCNCNTD6ovw"
 			]
 		}
 	},

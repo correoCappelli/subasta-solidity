@@ -43,7 +43,7 @@ contract Subasta {
         subastaTerminada=false;
         habilitarDevoluciones=false;
         ofertaBase = 1 ether; // oferta base o minima 1 Ether
-        tiempoDuracionSubasta = block.timestamp + 60 * 60; // 1 hora
+        tiempoDuracionSubasta = block.timestamp + 60 * 60 * 24 * 3; // 3 dias
         tiempoInicioSubasta = block.timestamp; // la subasta inicia al crear el contrato
         direccionOwner = payable(msg.sender); // direccion del Owner o Subastador. No es la del contrato
     }
@@ -148,19 +148,19 @@ contract Subasta {
      {
        subastaTerminada=true;
        habilitarDevoluciones=true;
+       emit SubastaFinalizada(ganadorDireccion, ofertaMasAlta);
     
         }
     
 
-// FUNCION DE RETORNO FONDOS AL FINALIZAR LA SUBASTA (la ejecuta el subastador)
+// FUNCION DE RETORNO FONDOS AL FINALIZAR LA SUBASTA (la ejecuta cada oferente)
 
 
     function retornarDeposito() 
     public   
     payable
-    //subastaTiempoFinalizado 
-    //devolucionesHabilitadas
-    //isOwner
+    subastaTiempoFinalizado 
+    devolucionesHabilitadas
     isNotGanador(msg.sender)
     
     {
@@ -185,7 +185,6 @@ contract Subasta {
     function retornarDepositoParciales(uint256 _cantidad) 
     public   
     payable 
-    //isOwner
     
     {
         uint256 montoParcial=_cantidad * 1 ether;
@@ -232,9 +231,9 @@ contract Subasta {
         return ofertas[oferente][ofertas[oferente].length-1];
     }
 
-    function verTimestampActual() private view returns (uint256) {
-        return block.timestamp;
-    }
+    //function verTimestampActual() private view returns (uint256) {
+    //    return block.timestamp;
+    //}
 
     function verTiempoFaltante() public view returns (uint256) {
         if (tiempoDuracionSubasta - block.timestamp >= 0) {
