@@ -93,4 +93,3 @@ Los oferentes pueden retirar hasta el monto de su **última oferta**, aplicando 
 
 ---
 
-Este **README.md** ya tiene toda la información clave sobre el contrato. ¿Quieres que agregue más detalles? 🚀📜  
