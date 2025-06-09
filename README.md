@@ -53,6 +53,32 @@ Los modificadores aplican reglas antes de ejecutar ciertas funciones:
 
 ---
 
+## 🔥 Eventos  
+
+Los eventos se utilizan para **emitir información relevante** sobre el estado del contrato en la blockchain. Esto permite a los participantes y aplicaciones monitorear cambios sin consumir mucho gas.  
+
+### 📌 `NuevaOferta(uint256 valor, address indexed ofertante)`  
+🔹 Se activa cada vez que un usuario realiza una nueva oferta.  
+🔹 Guarda el monto ofertado y la dirección del ofertante.  
+🔹 Útil para **actualizar la oferta más alta** y extender el tiempo de la subasta si aplica.  
+
+### 🏆 `SubastaFinalizada(address ganador, uint256 ofertaGanadora)`  
+🔹 Se dispara al **finalizar la subasta** (por tiempo o acción del subastador).  
+🔹 Muestra la dirección del **ganador** y el monto de la oferta ganadora.  
+🔹 Sirve para **notificar el cierre de la subasta** a todas las partes interesadas.  
+
+### 📜 `VerOfertantes(address ofertante, uint256[] ofertas)`  
+🔹 Se emite cuando alguien ejecuta `verTodasLasOfertas()`.  
+🔹 Registra todas las **ofertas realizadas** por cada participante.  
+🔹 Permite consultar el historial de ofertas.  
+
+💡 **Importancia de los Eventos**  
+✅ Son útiles para **registrar actividades clave** en la blockchain.  
+✅ Permiten que **aplicaciones externas** (como dApps) respondan a cambios.  
+✅ Ayudan en la auditoría y transparencia del contrato.  
+
+---
+
 ## 🚀 Funcionalidades  
 
 ### 1️⃣ **Realizar una Oferta (`OFERTAR()`)** 💰  
