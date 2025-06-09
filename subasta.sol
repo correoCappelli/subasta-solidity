@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity >=0.8.2 <0.9.0;
+pragma solidity >=0.6.12;
 
 contract Subasta {
 
@@ -15,12 +15,11 @@ contract Subasta {
     uint256 public ofertaBase;
     uint256 private tiempoDuracionSubasta;
     uint256 private tiempoInicioSubasta;
-    address payable private direccionSubasta;
+    address payable private direccionOwner;
     mapping(address => uint256) private depositos;
 
-    // almaceno la oferta mas alta en todo momento. Empiezo con 1 (ofertaBase)
-    // tambien almaceno la direccion del ofertante. Ya que seria el ganador hasta el momento al ser cada oferta mayor a la anterior.
-    uint256 private ofertaMasAlta = ofertaBase;
+    // tambien almaceno la direccion del ofertante. 
+    // Ya que seria el ganador hasta el momento al ser cada oferta mayor a la anterior.
     address private ganadorDireccion;
  
     // archivar direcciones y array de ofertas por cada oferente
@@ -43,11 +42,15 @@ contract Subasta {
     constructor() {
         subastaTerminada=false;
         habilitarDevoluciones=false;
-        ofertaBase = 1; // oferta base o minima 1 Ether
+        ofertaBase = 1 ether; // oferta base o minima 1 Ether
         tiempoDuracionSubasta = block.timestamp + 60 * 60; // 1 hora
         tiempoInicioSubasta = block.timestamp; // la subasta inicia al crear el contrato
-        direccionSubasta = payable(msg.sender); // direccion de la subasta es payable
+        direccionOwner = payable(msg.sender); // direccion del Owner o Subastador. No es la del contrato
     }
+
+    // almaceno la oferta mas alta en todo momento. Empiezo con 1 (ofertaBase)
+    
+    uint256 private ofertaMasAlta = ofertaBase;
 
     // Eventos:
     //    Nueva Oferta: Se emite cuando se realiza una nueva oferta.
@@ -67,13 +70,13 @@ contract Subasta {
 
     // b) es dueño o subastador
     modifier isOwner() {
-        require(msg.sender == direccionSubasta,"no es Owner. Acceso restringido");
+        require(msg.sender == direccionOwner,"no es Owner. Acceso restringido");
         _;
     }
 
     // c) no es dueño
     modifier notOwner() {
-        require(msg.sender != direccionSubasta,"es Owner. No puede ofertar");
+        require(msg.sender != direccionOwner,"es Owner. No puede ofertar");
         _;
     }
 
@@ -119,13 +122,12 @@ contract Subasta {
             return; // o utilizar revert() ? 
         }
 
-        (bool sent,) = direccionSubasta.call{value: msg.value}("");
-        require(sent, "falla en la transaccion");
+        depositos[msg.sender] +=msg.value; // actualizo el deposito del ofertante 
 
         setOferente(msg.sender,msg.value);
 
         ofertas[msg.sender].push(msg.value); // agrego al array ofertas
-        depositos[msg.sender] +=msg.value; // actualizo el deposito del ofertante      
+             
         ofertaMasAlta = msg.value; // almaceno la oferta mas alta hasta este momento
         ganadorDireccion = msg.sender; // almaceno la direccion del ganador hasta este momento
 
@@ -153,51 +155,66 @@ contract Subasta {
 // FUNCION DE RETORNO FONDOS AL FINALIZAR LA SUBASTA (la ejecuta el subastador)
 
 
-    function retornarDeposito(address payable dir) 
+    function retornarDeposito() 
     public   
     payable
     //subastaTiempoFinalizado 
-    devolucionesHabilitadas
-    isOwner
-    isNotGanador(dir)
+    //devolucionesHabilitadas
+    //isOwner
+    isNotGanador(msg.sender)
     
     {
-        require(msg.value<=depositos[dir],"no tiene suficientes fondos para retirar");
-        require(depositos[dir]>0,"no tiene fondos");
+        uint256 monto=depositos[msg.sender];
+        require(monto>0,"no tiene suficientes fondos para retirar");
         
-        (bool sent,) = dir.call{value: (msg.value*98)/100}(""); // retengo el 2% de comision y costos operativos
-        require(sent, "falla en la transaccion");
-        depositos[dir] -= msg.value; // disminuyo el deposito del ofertante
+        uint256 comision = (monto*2)/100;
+        uint256 montoADevolver=monto - comision; // la comision queda en el balance del contrato (address(this))
 
-        //payable(msg.sender).transfer(msg.value);
+        depositos[msg.sender]=0;
+        
+        
+        (bool sent,) = msg.sender.call{value: montoADevolver}(""); 
+        require(sent, "falla en la transaccion");
+        
            
     }
 
-// FUNCION DE RETORNO DEPOSITOS PARCIALES (la ejecuta el subastador a pedido de los ofertantes)
+// FUNCION DE RETORNO DEPOSITOS PARCIALES
 // Pueden retirar hasta el monto de la ultima oferta considerando la retencion del 2%
 
-    function retornarDepositoParciales(address payable dir) 
+    function retornarDepositoParciales(uint256 _cantidad) 
     public   
     payable 
-    isOwner
+    //isOwner
     
     {
-        require(msg.value<=depositos[dir],"no tiene suficientes fondos para retirar");
-        require(depositos[dir]>0,"no tiene fondos");
-        require((msg.value*102)/100<depositos[dir]-getOfertaMasALtaOferente(dir),
-            "puede retirar hasta la oferta ultima. Tener en cuenta el 2% de comision");
+        uint256 montoParcial=_cantidad * 1 ether;
+        uint256 comision = (montoParcial*2)/100;
+        uint256 montoADevolver=montoParcial-comision; // comision queda en el balance del contrato
         
-        (bool sent,) = dir.call{value: (msg.value*98)/100}(""); // retengo el 2% de comision y costos operativos
-        require(sent, "falla en la transaccion");
-        depositos[dir] -= msg.value; 
 
-        //payable(msg.sender).transfer(msg.value);
+        require(montoParcial<=depositos[msg.sender],"no tiene suficientes fondos para retirar");
+        require(depositos[msg.sender]>0,"no tiene fondos");
+        require(montoParcial<depositos[msg.sender]-getOfertaMasALtaOferente(msg.sender),
+            "puede retirar hasta la oferta ultima. Tener en cuenta el 2% de comision");
+
+
+        depositos[msg.sender] -= montoParcial; // actualizo el deposito del usuario que retira
+
+
+        (bool sent,) = msg.sender.call{value: montoADevolver}(""); 
+        require(sent, "falla en la transaccion");
+         
            
     }
 
 
 
 // FUNCIONES AUXILIARES
+
+    function verBalanceContrato() external view isOwner returns (uint256) {
+        return address(this).balance;
+    }
 
     function verGanador() external view returns (uint256[] memory,address) {
         return (ofertas[ganadorDireccion],ganadorDireccion);
