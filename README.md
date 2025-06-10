@@ -3,7 +3,23 @@
 ## 📜 Introducción  
 
 Este contrato implementa una **subasta descentralizada** en Ethereum, permitiendo a los participantes realizar ofertas en Ether.  
+
 **Nota:** La función `OFERTAR()` es **payable**, lo que significa que las ofertas realizadas se almacenan en `address(this).balance`, el balance del contrato. Puedes verificar el saldo acumulado usando la función auxiliar `verBalanceContrato()`.  
+
+**Nota:** En la funcion de cerrar la subasta se desactivó el chequeo de tiempo finalizado `subastaTiempoFinalizado` por fines de testeo . En produccion se recomienda activarlo
+
+```
+function finalizarSubasta() 
+    public
+    isOwner
+    //subastaTiempoFinalizado
+     {
+       subastaTerminada=true;
+       habilitarDevoluciones=true;
+       emit SubastaFinalizada(ganadorDireccion, ofertaMasAlta);
+    
+        }
+```
 
 ---
 
